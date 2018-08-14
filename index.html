@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>
+			Lyric Editor Offline
+		</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="Assets/Vendor/Bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" href="Assets/Vendor/Mediaelement/mediaelementplayer.min.css">
+		
+		<style>
+			.masterContainer
+			{
+				padding-top: 10px;
+			}
+			
+			.hideElement
+			{
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-sm bg-light">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="#">
+						Chiira Lyric Editor For AIMP
+					</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="container">
+			<div class="row masterContainer">
+				<div class="col-md-9">
+					<div class="row">
+						<div class="col-md-12 playerContainer">
+						</div>
+						<div class="col-md-12 lyricContainer">
+							<table class="table table-sm">
+								<tbody class="lyricTable">
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="lyricTool">
+						<label class="btn btn-primary btn-block">
+							Open Song <input type="file" id="inpMusic" hidden>
+						</label>
+						<button class="btn btn-block btn-primary" type="button" data-toggle="modal" data-target="#lyricModal">
+							Insert full lyrics
+						</button>
+						<button class="btn btn-block btn-primary btnSyncTime" type="button">
+							Sync current line
+						</button>
+						<button class="btn btn-block btn-success btnLyricOutput">
+							Generate lyric output
+						</button>
+						<!--<button class="btn btn-block btn-success">
+							Save as .lrc
+						</button>-->
+						
+						<!--For debugging-->
+						<!--<span>Current time: </span><span class="time"></span>-->
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal fade" id="lyricModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="comment">
+									Insert full lyric here:
+								</label>
+								<textarea class="form-control taLyric" rows="5"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							Close
+						</button>
+						<button type="button" class="btn btn-primary btnInsertLyric">
+							Insert
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="modal fade" id="lyricOutputModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<form>
+							<div class="form-group">
+								<label for="comment">
+									Lyric result:
+								</label>
+								<textarea class="form-control taLyricResult" rows="5"></textarea>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">
+							Close
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script src="Assets/Vendor/Jquery/jquery.min.js"></script>
+	<script src="Assets/Vendor/Popperjs/popper.min.js"></script>
+	<script src="Assets/Vendor/Bootstrap/js/bootstrap.min.js"></script>
+	<script src="Assets/Vendor/Mediaelement/mediaelement.min.js"></script>
+	<script src="Assets/Vendor/Stickyjs/jquery.sticky.js"></script>
+	<script src="Assets/Js/main.js"></script>
+</html>
