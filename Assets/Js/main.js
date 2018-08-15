@@ -9,10 +9,19 @@ $(document).ready(function(){
 		$('.taLyricResult').val(GenerateLyricOutput());
 	})
 	
-	$(".btnSyncTime").click(function(){  			
-	$(".time").html(GetCurrentTime());
-	SetLyricRowTime();
-	JumpToNextLyricRow();
+	$(".btnSyncTime").click(function(){  	
+		if (!InitialValidation())
+			return false;
+		
+		$(".time").html(GetCurrentTime());
+		SetLyricRowTime();
+		JumpToNextLyricRow();
+	});
+	
+	$(".btnTypeLyric").click(function(){
+		$('#lyricModal').modal('show').on('shown.bs.modal', function () {
+			$(".taLyric").focus();
+		});
 	});
 	
 	$(".btnInsertLyric").click(function(){
@@ -78,7 +87,7 @@ function GenerateLyricTable()
 		strRow += '<tr class="lyricRow lyricRowData-' + mainLyric[i].id + '">'; 
 		strRow += '<td class="lyricText lyricTextData-' + mainLyric[i].id + '" data-id="'+mainLyric[i].id+'">'+ mainLyric[i].text +'</td>'; 
 		strRow += '<td class="timeData timeData-'+ mainLyric[i].id +'">'+ mainLyric[i].time +'</td>'; 
-		strRow += '<td><a href="javascript:void(0)" class="text-danger btnDeleteRowLyric" data-id="'+ mainLyric[i].id +'">Del</a></td>'; 
+		strRow += '<td><a href="javascript:void(0)" class="text-danger btnDeleteRowLyric" data-id="'+ mainLyric[i].id +'"><i class="fa fa-trash"></i></a></td>'; 
 		strRow += '</tr>'; 
 		
 		$(".lyricTable").append(strRow);
@@ -88,12 +97,33 @@ function GenerateLyricTable()
 	{
 		$(".lyricRowData-" + mainLyric[0].id).addClass("bg-warning");
 		$(".btnDeleteRowLyric").click(function(){
-			$(".lyricRowData-" + $(this).attr("data-id")).remove();
+			DeleteRowLyric($(this).attr("data-id"));
 		});
 		$(".lyricText").unbind().click(function(){
 			SelectRowLyric($(this).attr("data-id"));
 		});
 	}
+}
+
+function DeleteRowLyric(lyricId)
+{
+	bootbox.confirm({
+	    message: "Delete this row?",
+	    buttons: {
+	        confirm: {
+	            label: 'Yes',
+	            className: 'btn-success'
+	        },
+	        cancel: {
+	            label: 'No',
+	            className: 'btn-danger'
+	        }
+	    },
+	    callback: function (result) {
+	    	if (result)
+	   			$(".lyricRowData-" + lyricId).remove();     	
+	    }
+	});
 }
 
 function SelectRowLyric(lyricId, autoPlayMusic = true)
@@ -162,15 +192,56 @@ function JumpToNextLyricRow()
 		if (mainLyric[i].id == currentLineId && i != lastIndexLyric)
 		{
 			SelectRowLyric(mainLyric[i+1].id, false); 
+			AutoScrollLyricRow("lyricRowData-" + mainLyric[i+1].id);
 			return true;
 		}
 	}
 }
 
+function AutoScrollLyricRow(rowElemClass)
+{
+	var docViewTop = $(window).scrollTop();
+    var docViewBottom = (docViewTop + $(window).height()) - 48;
+    
+    var elemTop = $('.' + rowElemClass).offset().top;
+    var elemBottom = elemTop + $('.' + rowElemClass).height();
+    
+    if (elemBottom > docViewBottom)
+    {
+		$(window).scrollTop(docViewTop + $('.' + rowElemClass).height());
+	}
+}
+
+function GetIndexMainLyricByCurrentid(lyricId)
+{
+	for (var i = 0; i < mainLyric.length; i++)
+	{
+		if (mainLyric[i].id == lyricId)
+			return i;
+	}
+}
+
+function InitialValidation()
+{
+	if ($('#inpMusic').get(0).files.length === 0)
+	{
+		alert("Please insert song");
+		return false;	
+	}
+	
+	if (mainLyric.length == 0)
+	{
+		alert("Please insert lyric.");
+		return false;	
+	}
+	
+	return true;
+}
+
 function GenerateLyricOutput()
 {
 	if (mainLyric.length == 0)
-		return false;
+		return '< No result available >';
 	
 	var resultLyric = '';
 	for (var i = 0; i < mainLyric.length; i++)
